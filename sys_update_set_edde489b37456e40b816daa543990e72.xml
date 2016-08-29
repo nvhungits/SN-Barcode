@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2016-08-29 01:44:35">
+<sys_update_set action="INSERT_OR_UPDATE">
+<application display_value="Global">global</application>
+<completed_by display_value="Hung Nguyen">b6d5c2256f5431000112bf21be3ee492</completed_by>
+<completed_on>2016-08-29 01:43:51</completed_on>
+<description>Requirement - ability to generate barcode (standard + qr) within ServiceNow and have it associated to a record to allow for printing.
+
+This is a new task - create it as a new module/application
+
+Functions:
+- Able to receive parameters of: Table Name, ID, Output Barcode Image field, Code Type
+- On receiving these parameters, it should generate the barcode that corresponds to the ID (code type will determine if its normal or qr)
+Useful links i found:
+https://community.servicenow.com/thread/223740
+http://www.servicenowdiary.com/2013/05/05/a-simple-bar-code-generator-with-basic-features/
+https://servicenowgems.com/2013/11/06/generate-printable-qr-codes-from-assets/
+- What I'd like is for a library like function, where any other application can call on the library and then pass in the parameters and have the library then store the output barcode image on the field provided in the parameter
+- The library should also link to a "Barcode database" where it keeps a list of all barcodes it has generated and the references to the record it is generated for, i.e. it has the following fields:
+  - Number = string (autonumber with up to 10 numbers, prefix of CODE)
+  - Table_name = string
+  - Reference ID = string
+  - Reference = reference to the record (similar to document_id field in sysapproval_approver table)
+  - Barcode = image/or whatever field that we can store the generated barcode
+  - QR code = image/or whatever field that we can store the generated qr code
+- Another library function that takes in parameters "Table name" and "Reference ID".  On calling this function, it should open a new window/tab/glide dialog and then retrieve the barcode/qr code and show just the code, with a print button at the top which will open the printer function</description>
+<install_date/>
+<installed_from/>
+<is_default>false</is_default>
+<merged_to display_value=""/>
+<name>Barcode</name>
+<origin_sys_id/>
+<release_date/>
+<remote_sys_id display_value=""/>
+<state>complete</state>
+<sys_created_by>hung.nguyen@rumbleasia.com</sys_created_by>
+<sys_created_on>2016-08-10 06:19:43</sys_created_on>
+<sys_id>edde489b37456e40b816daa543990e72</sys_id>
+<sys_mod_count>3</sys_mod_count>
+<sys_updated_by>hung.nguyen@rumbleasia.com</sys_updated_by>
+<sys_updated_on>2016-08-29 01:43:51</sys_updated_on>
+</sys_update_set>
+</unload>
