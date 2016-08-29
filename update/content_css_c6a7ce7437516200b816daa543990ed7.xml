@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="content_css">
+    <content_css action="INSERT_OR_UPDATE">
+        <name>main</name>
+        <style>/* bwip-js : lib/demo.css */&#13;
+body {&#13;
+	font-size:			11pt;&#13;
+	font-family: 		"Lucida Grande",Calibri,Helvetica,Arial,sans-serif;&#13;
+	margin:				0px;&#13;
+}&#13;
+#header {&#13;
+	position:			relative;&#13;
+	background-color:	#212121;&#13;
+	color:				#fff;&#13;
+	height:				48px;&#13;
+	padding-left:		21px;&#13;
+	padding-top:		0px;&#13;
+	padding-bottom:		20px;&#13;
+	margin-bottom:		17px;&#13;
+}&#13;
+#header #bwipjs {&#13;
+	font-size:			25px;&#13;
+	font-family: 		"Lucida Grande",Calibri,Helvetica,Arial,sans-serif;&#13;
+	font-weight:		bold;&#13;
+	position:			absolute;&#13;
+	bottom:				21px;&#13;
+}&#13;
+#header #version {&#13;
+	font-size:			10px;&#13;
+	font-family: 		"Lucida Grande",Calibri,Helvetica,Arial,sans-serif;&#13;
+	font-weight:		100;&#13;
+	color:				#a7a7a7;&#13;
+	position:			absolute;&#13;
+	bottom:				2px;&#13;
+	right:				12px;&#13;
+}&#13;
+input, select, label {&#13;
+	font-family:		Verdana, Arial, san-serif;&#13;
+	font-size:			10.5pt;&#13;
+}&#13;
+#fonthdr {&#13;
+	position:			absolute;&#13;
+	bottom:				0px;&#13;
+	left:				556px;&#13;
+	width:				16ex;&#13;
+	padding-left:		2ex;&#13;
+	padding-top:		1ex;&#13;
+	padding-bottom:		1ex;&#13;
+	background-color:			#0090ff;&#13;
+	border-top-left-radius:		4px;&#13;
+	border-top-right-radius:	4px;&#13;
+	color:				white;&#13;
+	font-family:		Verdana, Arial, san-serif;&#13;
+	font-weight:		bold;&#13;
+	cursor:				default;&#13;
+}&#13;
+#fonthdr:hover {&#13;
+	background-color:	#32aaff;&#13;
+}&#13;
+#fontdiv {&#13;
+	z-index:			999;&#13;
+	position:			absolute;&#13;
+	top:				68px;&#13;
+	left:				556px;&#13;
+	padding:			0px;&#13;
+	margin:				0px;&#13;
+	border:				0px;&#13;
+}&#13;
+#fontdiv div.inner {&#13;
+	border:				1px solid #b9c3ff;&#13;
+	border-top:			0px;&#13;
+	border-bottom-left-radius:	3px;&#13;
+	border-bottom-right-radius:	3px;&#13;
+	padding:			16px;&#13;
+	color:				#000;&#13;
+	background-color:	#e3eeff;&#13;
+	font-family:		Verdana, Arial, san-serif;&#13;
+	x-box-shadow:			2px 2px 3px #ddd;&#13;
+}&#13;
+#dropzone {&#13;
+	width:				472px;&#13;
+	text-align:			center;&#13;
+	border:				1px dashed #999;&#13;
+	background-color:	#e7e7e7;&#13;
+	color:				#777;&#13;
+	overflow:			hidden;&#13;
+}&#13;
+#dropzone:hover {&#13;
+	border:				1px dashed #777;&#13;
+	color:				#555;&#13;
+	background-color:	#eeeeee;&#13;
+}&#13;
+#dropzone div.content {&#13;
+	padding:			32px 96px;&#13;
+}&#13;
+#dropzone .fd-file {&#13;
+	opacity:			0;&#13;
+	font-size:			72px;&#13;
+	position:			absolute;&#13;
+	right:				0px;&#13;
+	top:				0px;&#13;
+	width:				1000px;&#13;
+}&#13;
+#fontlist.visible {&#13;
+	margin-top:			20px;&#13;
+	border-top:			1px solid #bbb;&#13;
+	padding-top:		20px;&#13;
+}&#13;
+#fontlist td, #fontlist th {&#13;
+	text-align:			left;&#13;
+	padding:			3px 1ex;&#13;
+	border-bottom:		1px solid #999;&#13;
+}&#13;
+#fontlist td.delete span {&#13;
+	opacity:			.4;&#13;
+}&#13;
+#fontlist td.delete:hover span {&#13;
+	opacity:			1;&#13;
+}&#13;
+#params {&#13;
+	margin-left:		12px;&#13;
+}&#13;
+#content {&#13;
+	margin-left:		20px;&#13;
+}&#13;
+#params th {&#13;
+	text-align:			right;&#13;
+	padding-right:		1.5ex;&#13;
+}&#13;
+#scaleX, #scaleY {&#13;
+	width:				3ex;&#13;
+	font-size:			10.5pt;&#13;
+}&#13;
+a.saveas {&#13;
+	color:				blue;&#13;
+}&#13;
+a.saveas:visited {&#13;
+	color:				blue;&#13;
+}&#13;
+</style>
+        <sys_class_name>content_css</sys_class_name>
+        <sys_created_by>hung.nguyen@rumbleasia.com</sys_created_by>
+        <sys_created_on>2016-08-15 06:58:26</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>c6a7ce7437516200b816daa543990ed7</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>main</sys_name>
+        <sys_package display_value="Barcode" source="x_rugl_barcode">6ff2892b6f09a20029726af6ad3ee447</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="Barcode">6ff2892b6f09a20029726af6ad3ee447</sys_scope>
+        <sys_update_name>content_css_c6a7ce7437516200b816daa543990ed7</sys_update_name>
+        <sys_updated_by>hung.nguyen@rumbleasia.com</sys_updated_by>
+        <sys_updated_on>2016-08-15 06:58:46</sys_updated_on>
+        <type>local</type>
+        <url/>
+    </content_css>
+</record_update>

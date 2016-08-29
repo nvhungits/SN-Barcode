@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description/>
+        <field>sys_created_on</field>
+        <global>true</global>
+        <messages/>
+        <name>load Image Barcode</name>
+        <order/>
+        <script><![CDATA[function onLoad() {
+	var barcode_text = g_form.getValue("barcode_text");
+	var imageBarcode = g_form.getElement("image_barcode");
+	imageBarcode.type = "image";
+	imageBarcode.src = barcode_text;
+	imageBarcode.href = "#";
+	g_form.setDisplay('barcode_text', false); 
+}]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>hung.nguyen@rumbleasia.com</sys_created_by>
+        <sys_created_on>2016-08-15 10:25:41</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_domain>global</sys_domain>
+        <sys_id>06f4323437916200b816daa543990ef3</sys_id>
+        <sys_mod_count>61</sys_mod_count>
+        <sys_name>load Image Barcode</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Barcode" source="x_rugl_barcode">6ff2892b6f09a20029726af6ad3ee447</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="Barcode">6ff2892b6f09a20029726af6ad3ee447</sys_scope>
+        <sys_update_name>sys_script_client_06f4323437916200b816daa543990ef3</sys_update_name>
+        <sys_updated_by>hung.nguyen@rumbleasia.com</sys_updated_by>
+        <sys_updated_on>2016-08-16 07:05:18</sys_updated_on>
+        <table>x_rugl_barcode_barcode_db</table>
+        <type>onLoad</type>
+        <ui_type>0</ui_type>
+        <view/>
+    </sys_script_client>
+</record_update>

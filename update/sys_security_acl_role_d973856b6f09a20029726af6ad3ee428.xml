@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_security_acl_role">
+    <sys_security_acl_role action="INSERT_OR_UPDATE">
+        <sys_class_name>sys_security_acl_role</sys_class_name>
+        <sys_created_by>hung.nguyen@rumbleasia.com</sys_created_by>
+        <sys_created_on>2016-08-11 04:47:48</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>d973856b6f09a20029726af6ad3ee428</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_rugl_barcode_barcode_db.x_rugl_barcode_barcode_db_user</sys_name>
+        <sys_package display_value="Barcode" source="x_rugl_barcode">6ff2892b6f09a20029726af6ad3ee447</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="Barcode">6ff2892b6f09a20029726af6ad3ee447</sys_scope>
+        <sys_security_acl display_value="x_rugl_barcode_barcode_db">1d73856b6f09a20029726af6ad3ee427</sys_security_acl>
+        <sys_update_name>sys_security_acl_role_d973856b6f09a20029726af6ad3ee428</sys_update_name>
+        <sys_updated_by>hung.nguyen@rumbleasia.com</sys_updated_by>
+        <sys_updated_on>2016-08-11 04:47:48</sys_updated_on>
+        <sys_user_role display_value="x_rugl_barcode_barcode_db_user" name="x_rugl_barcode_barcode_db_user">ac73856b6f09a20029726af6ad3ee422</sys_user_role>
+        <transaction_id/>
+    </sys_security_acl_role>
+</record_update>

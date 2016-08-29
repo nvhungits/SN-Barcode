@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script><![CDATA[$(document).ready(function() {
+	var lastSymbol	= localStorage.getItem('bwipjsLastSymbol');
+	var lastBarText	= localStorage.getItem('bwipjsLastBarText');
+	var lastAltText	= localStorage.getItem('bwipjsLastAltText');
+	var lastOptions = localStorage.getItem('bwipjsLastOptions');
+	var lastRotate	= localStorage.getItem('bwipjsLastRotation');
+	var lastScaleX  = +localStorage.getItem('bwipjsLastScaleX');
+	var lastScaleY  = +localStorage.getItem('bwipjsLastScaleY');
+	var lastFntMono	= +localStorage.getItem('bwipjsLastFontMono');
+	
+	var $sel = $('#symbol')
+	.change(function(ev) {
+		$("#proof").text('');
+		var desc = symdesc[$(this).val()];
+		if (desc) {
+			$('#symtext').val(desc.text);
+			$('#symopts').val(desc.opts);
+		} else {
+			$('#symtext').val('');
+			$('#symopts').val('');
+		}
+		$('#symaltx').val('');
+		$('.saveas').css('visibility', 'hidden');
+		$('#proof-img').css('visibility', 'hidden');
+		$('#stats').text('');
+		var canvas = document.getElementById('canvas');
+		canvas.width = canvas.width;
+	});
+	
+	if (lastSymbol) {
+		$sel.val(lastSymbol);
+	} else {
+		$sel.prop('selectedIndex', 0);
+	}
+	$sel.trigger('change');
+	
+	if (lastBarText) {
+		$('#symtext').val(lastBarText);
+		$('#symaltx').val(lastAltText);
+		$('#symopts').val(lastOptions);
+	}
+	if (lastScaleX){if(lastScaleY) {
+		$('#scaleX').val(lastScaleX);
+		$('#scaleY').val(lastScaleY);
+	}}
+	if (lastRotate) {
+		document.getElementById('rot' + lastRotate).checked = true;
+	}
+	if (lastFntMono) {
+		document.getElementById('fontMono').checked = true;
+	}
+	
+	$('#scaleX').spinner({ min:1 })
+	.on("spinstop", function(ev) {
+		$('#scaleY').val(this.value);
+	});
+	$('#scaleY').spinner({ min:1 });
+	$('#render').button().click(render);
+	$('#render_withID').button().click(render_withID);
+	$('#fonthdr').click(fontClick);
+	$('#addfont').button().click(fontRead);
+	$('.saveas').css('visibility', 'hidden');
+	
+	if (location.search.indexOf('proofs=1') != -1) {
+		// Show the images from BWIPP with Ghostscript
+		var img = document.createElement('img');
+		img.id					= 'proof-img';
+		img.style.visibility 	= 'hidden';
+		img.style.position		= 'absolute';
+		img.style.top			= '0px';
+		img.style.left			= '0px';
+		$('#proof').append(img);
+	}
+	
+	// File picker
+	var zone = new FileDrop('dropzone');
+	zone.event('send', function (files) {
+		var file = files.first();
+		$('#dropzone div.droptext').css('display', 'none');
+		$('#dropzone div.dropfile').css('display', 'block').text(file.name);
+		$('#dropzone input.fd-file')[0].title = file.name;
+		
+		fontSelected(file.nativeFile);		// Native browser File object
+	});
+	
+	// Allow Enter to render
+	$('#params').keypress(function(ev) {
+		if (ev.which == 13) {
+			render();
+			ev.stopPropagation();
+			ev.preventDefault();
+			return false;
+		}
+	});
+});
+
+function render_withID(){
+	var text = $('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
+	render();
+	$("#proof").text(text);
+	var node = document.getElementById('content');
+	var canvas = document.createElement('canvas');
+	//var canvas = document.getElementById('canvas');
+	canvas.width = node.scrollWidth;
+	canvas.height = node.scrollHeight;
+	domtoimage.toPng(node).then(function (pngDataUrl) {
+		var img = new Image();
+		img.onload = function () {
+			var context = canvas.getContext('2d');
+			context.translate(canvas.width, 0);
+			context.scale(-1, 1);
+			context.drawImage(img, 0, 0);
+			//parent.removeChild(node);
+			//node.appendChild(canvas);
+			var canvas_main = document.getElementById('canvas');
+			canvas_main-=canvas;
+		};
+
+		img.src = pngDataUrl;
+	});
+}
+
+function render() {
+	var elt  = symdesc[$('#symbol').val()];
+	var text = $('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
+	var altx = $('#symaltx').val().replace(/^\s+/,'').replace(/\s+$/,'');
+	var opts = $('#symopts').val().replace(/^\s+/,'').replace(/\s+$/,'');
+	var rot  = document.querySelector('input[name="rot"]:checked').value;
+	var text_temp = text + "";
+	if(altx!=""){
+		text_temp = $("#instance").val() + altx+".do?sys_id="+text;
+	}
+	
+	// Anti-aliased or monochrome fonts and scaling factors.
+	var monochrome = document.getElementById('fontMono').checked;
+	var scaleX = +document.getElementById('scaleX').value || 2;
+	var scaleY = +document.getElementById('scaleY').value || 2;
+	
+	localStorage.setItem('bwipjsLastSymbol',  elt.sym);
+	localStorage.setItem('bwipjsLastBarText', text_temp);
+	localStorage.setItem('bwipjsLastAltText', altx);
+	localStorage.setItem('bwipjsLastOptions', opts);
+	localStorage.setItem('bwipjsLastScaleX', scaleX);
+	localStorage.setItem('bwipjsLastScaleY', scaleY);
+	//localStorage.setItem('bwipjsLastFontMono', monochrome ? 1 : 0);
+	localStorage.setItem('bwipjsLastRotation', rot);
+	
+	// Link in the freetype module and how to render fonts.
+	var bw = new BWIPJS(Module, monochrome);
+	
+	// Clear the page
+	$("#proof").text('');
+	$('#output').text('');
+	$('#stats').text('');
+	$('#proof-img').css('visibility', 'hidden');
+	$('.saveas').css('visibility', 'hidden');
+	
+	var canvas = document.getElementById('canvas');
+	canvas.height = 1;
+	canvas.width  = 1;
+	
+	// Convert the options to a dictionary object, so we can pass alttext with
+	// spaces.
+	var tmp = opts.split(' ');
+	opts = {};
+	for (var i = 0; i != tmp.length; i++) {
+		if (!tmp[i]) {
+			continue;
+		}
+		var eq = tmp[i].indexOf('=');
+		if (eq == -1) {
+			opts[tmp[i]] = true;
+		} else {
+			opts[tmp[i].substr(0, eq)] = tmp[i].substr(eq+1);
+		}
+	}
+	
+	// Add the alternate text
+	if (altx) {
+		opts.alttext = altx;
+	}
+	// BWIPP does not extend the background color into the
+	// human readable text.  Fix that in the bitmap interface.
+	if (opts.backgroundcolor) {
+		bw.bitmap(new Bitmap(opts.backgroundcolor));
+		delete opts.backgroundcolor;
+	} else {
+		bw.bitmap(new Bitmap);
+	}
+	
+	// Set the scaling factors
+	bw.scale(scaleX, scaleY);
+	
+	// Add optional padding to the image
+	bw.bitmap().pad(+opts.paddingwidth*scaleX || 0,
+	+opts.paddingheight*scaleY || 0);
+	
+	var ts0 = Date.now();
+	
+	// Render the bar code
+	try {
+		// Create a new BWIPP instance for each
+		BWIPP()(bw, elt.sym, text_temp, opts);
+	} catch (e) {
+		// Watch for BWIPP generated raiseerror's.
+		var msg = ''+e;
+		if (msg.indexOf("bwipp.") >= 0) {
+			$('#output').text(msg);
+		} else if (e.stack) {
+			$('#output').text(e.stack);
+		} else {
+			$('#output').text(e);
+		}
+		return;
+	}
+	
+	var ts1 = Date.now();
+	
+	bw.bitmap().show(canvas, rot);
+	
+	var ts2 = Date.now();
+	
+	setURL(text,altx,opts,canvas.toDataURL("image/png"));
+	$('#stats').text('Rendered in ' + (ts2-ts0) + ' msecs');
+	$('.saveas').css('visibility', 'visible');
+	saveCanvas.basename = elt.sym + '-' +
+	text.replace(/[^a-zA-Z0-9._]+/g, '-');
+	
+	// Show proofs?
+	if (location.search.indexOf('proofs=1') != -1) {
+		var img = document.getElementById('proof-img');
+		if (img) {
+			img.src = 'proofs/' + elt.sym + '.png';
+			img.style.visibility = 'visible';
+		}
+	}
+}
+function saveCanvas(type, ext) {
+	var canvas = document.getElementById('canvas');
+	canvas.toBlob(function (blob) {
+		saveAs(blob, saveCanvas.basename + ext);
+	}, type, 1);
+}
+function setURL(refid,tablename,docID,data) {
+	var elt  = symdesc[$('#symbol').val()];
+	var text = $('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
+	var altx = $('#symaltx').val().replace(/^\s+/,'').replace(/\s+$/,'');
+	var opts = $('#symopts').val().replace(/^\s+/,'').replace(/\s+$/,'');
+	document.getElementById('apiurl').onclick=function(){
+		var msg ="";
+		try{
+			var gr = new GlideRecord('x_rugl_barcode_barcode_db');
+			gr.initialize();
+			if(refid!="")
+				gr.reference_id = refid;
+			if(tablename!=""){
+				gr.table_name = tablename;
+			}
+			if(refid!=""&&tablename!=""){
+				gr.document_id = tablename+".do?sys_id="+refid;
+			}
+			gr.barcode_type = elt.desc;
+			gr.barcode_text = data;
+			var newID = gr.insert();
+			if(confirm("Insert Sucessful. Do you want to open new record?")){
+				window.open("x_rugl_barcode_barcode_db.do?sys_id="+newID);
+			}
+		}
+		catch(e){
+			msg = ''+e;
+			if (msg.indexOf("bwipp.") >= 0) {
+				$('#output').text(msg);
+			} else if (e.stack) {
+				$('#output').text(e.stack);
+			} else {
+				$('#output').text(e);
+			}
+			return;
+		}
+	};
+}]]></client_script>
+        <description/>
+        <direct>false</direct>
+        <endpoint>x_rugl_barcode_BarcodeV2.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+	<!--Main -->
+	<link href="c6a7ce7437516200b816daa543990ed7.cssdbx?" rel="stylesheet" type="text/css" />
+	<!--jquery-ui.min-->
+	<link href="d9d7ce3437516200b816daa543990ef4.cssdbx?" rel="stylesheet" type="text/css" />
+	<g:requires name="jquery-1.11.3.min.jsdbx" />
+	<g:requires name="x_rugl_barcode.jquery-ui.min.jsdbx" />
+	<g:requires name="x_rugl_barcode.fonts.jsdbx" />
+	<g:requires name="x_rugl_barcode.filedrop-min.jsdbx" />
+	<script type="text/javascript">
+		var Module = {
+		// memoryInitializerPrefixURL:'your-path-here/',
+		preRun:[ function() {
+				Module.FS_createPreloadedFile("/", "Inconsolata.otf",
+											 "fonts/Inconsolata.otf", true, false);
+		} ],
+		postRun:[ function() {
+				var load_font = Module.cwrap("load_font", 'number',
+											['string','string','number']);
+				load_font("Inconsolata.otf", "INCONSOLATA", 108);
+
+				// Load any previously saved fonts
+				for (var i = 0; i != 8; i++) {
+					if (!localStorage.getItem('bwipjsFontName' + i))
+						continue;
+
+					var fontname = localStorage.getItem('bwipjsFontName' + i);
+					var filename = localStorage.getItem('bwipjsFileName' + i);
+					var sizemult = localStorage.getItem('bwipjsSizeMult' + i);
+					var fontfile = atob(localStorage.getItem('bwipjsFontFile' + i));
+					try {
+						fontLoad(fontname, filename, sizemult, fontfile);
+						fontShow(fontname, filename, sizemult);
+					} catch (e) {
+						alert('Error: ' + fontname + ': ' + filename + ': ' + e);
+
+						localStorage.removeItem('bwipjsFontName' + i);
+						localStorage.removeItem('bwipjsFileName' + i);
+						localStorage.removeItem('bwipjsSizeMult' + i);
+						localStorage.removeItem('bwipjsFontFile' + i);
+					}
+				}
+		} ]
+	};
+	</script>
+	<g:requires name="x_rugl_barcode.freetype.jsdbx" />
+	<g:requires name="x_rugl_barcode.bwipp.jsdbx" />
+	<g:requires name="x_rugl_barcode.bwipjs.jsdbx" />
+	<g:requires name="x_rugl_barcode.bitmap.jsdbx" />
+	<g:requires name="x_rugl_barcode.symdesc.jsdbx" />
+	<g:requires name="x_rugl_barcode.canvas-toblob.jsdbx" />
+	<g:requires name="x_rugl_barcode.filesaver.jsdbx" />
+	<g:requires name="x_rugl_barcode.dom-to-image.jsdbx" />
+	<div ng-app='MyModule'>
+		<div ng-controller='DefaultCtrl'>
+			<!--<input auto-complete="true" ui-items="names" ng-model="selected" />-->
+		</div>
+	</div>
+	<g:evaluate>
+		var barcode = new GlideRecord("x_rugl_barcode_types_of_barcodes");
+		barcode.addQuery("active",true);
+		barcode.query();
+	</g:evaluate>
+	<input type="hidden" id="instance" value="${gs.getProperty('glide.servlet.uri')}" />
+<div id="params">
+<table border='0' cellpading='0' cellspacing='0'>
+<tr>
+<td style="vertical-align:top">
+	<table border='0' cellpading='0' cellspacing='0'>
+		<tr><th>Barcode Type:</th>
+			<!-- Do not change the `select id="symbol"` - see develop/mkdesc -->
+			<td>
+				<select id="symbol" style="width:63.5ex">
+				<!-- Barcode Writer in Pure PostScript - Version 2016-06-03 -->
+				<j:while test="${barcode.next()}">
+					<option value="${barcode.name}">${barcode.symbology}</option>
+				</j:while>
+				</select>
+			</td>
+		</tr>
+		<tr><th>Reference ID:</th><td><input id="symtext" type="text" style="width:63ex"/></td></tr>
+		<tr><th>Table Name:</th><td><input id="symaltx" type="text" style="width:63ex"/></td></tr>
+		<tr style="display:none"><th>Options:</th><td><input id="symopts" type="text" style="width:63ex"/></td></tr>
+		<tr>
+			<td colspan="2">
+				<style>
+					.saveas{
+						padding:12px;
+					}
+				</style>
+				<a class="saveas" href="javascript:saveCanvas('image/png','.png')">Save As PNG</a>
+				<a class="saveas"  style="display:none" href="javascript:saveCanvas('image/jpeg','.jpg')">Save As JPEG</a>
+				<a class="saveas" id="apiurl" href="">Insert to DB</a>
+				<div id="stats"></div><br/>
+			</td>
+		</tr>
+	</table>
+</td>
+<td style="padding-left:10mm;vertical-align:top">
+	<table border='0' cellpading='0' cellspacing='5'>
+		<tr><th>Scale X,Y:</th>
+			<td>
+				<input type="text" id="scaleX" value='2'/>
+				<input type="text" id="scaleY" value='2'/>
+			</td>
+		</tr>
+		<tr style="display:none"><th>Image Rotation:</th>
+			<td>
+				<label for="rotN"><input type="radio" name="rot" checked="true" value="N" id="rotN"/>Normal</label>
+				<label for="rotR"><input type="radio" name="rot" value="R" id="rotR"/>Right</label>
+				<label for="rotL"><input type="radio" name="rot" value="L" id="rotL"/>Left</label>
+				<label for="rotI"><input type="radio" name="rot" value="I" id="rotI"/>Invert</label>
+			</td>
+		</tr>
+		<tr style="display:none"><th>Font Rendering:</th>
+			<td>
+				<label for="fontAnti">
+					<input type="radio" name="font" value="A" id="fontAnti"/>Anti-Aliased</label>
+				<label for="fontMono">
+					<input type="radio" name="font" checked="true" value="M" id="fontMono"/>Monochrome</label>
+			</td>
+		</tr>
+		<tr>
+			<td><button id="render_withID">Show Barcode</button></td>
+			<td><button id="render">Show Barcode without ID</button></td>
+		</tr>
+	</table>
+</td></tr>
+</table>
+</div>
+<div id="content">
+	<canvas id="canvas" width='1' height='1' style="border:1px solid #fff;visibility:hidden"></canvas>
+	<div id="proof" style="margin:-5px 5px;font-size:25px;"></div>
+	<div id="output" style="white-space:pre"></div>
+</div>
+	
+</j:jelly>]]></html>
+        <name>BarcodeV2</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>hung.nguyen@rumbleasia.com</sys_created_by>
+        <sys_created_on>2016-08-15 02:29:39</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>7c2ac13037116200b816daa543990ec3</sys_id>
+        <sys_mod_count>148</sys_mod_count>
+        <sys_name>BarcodeV2</sys_name>
+        <sys_package display_value="Barcode" source="x_rugl_barcode">6ff2892b6f09a20029726af6ad3ee447</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="Barcode">6ff2892b6f09a20029726af6ad3ee447</sys_scope>
+        <sys_update_name>sys_ui_page_7c2ac13037116200b816daa543990ec3</sys_update_name>
+        <sys_updated_by>hung.nguyen@rumbleasia.com</sys_updated_by>
+        <sys_updated_on>2016-08-19 06:41:58</sys_updated_on>
+    </sys_ui_page>
+</record_update>

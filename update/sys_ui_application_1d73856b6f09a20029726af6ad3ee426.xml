@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_ui_application">
+    <sys_ui_application action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <hint/>
+        <name>DB</name>
+        <order/>
+        <roles>x_rugl_barcode_barcode_db_user</roles>
+        <sys_class_name>sys_ui_application</sys_class_name>
+        <sys_created_by>hung.nguyen@rumbleasia.com</sys_created_by>
+        <sys_created_on>2016-08-11 04:47:47</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_domain>global</sys_domain>
+        <sys_id>1d73856b6f09a20029726af6ad3ee426</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>DB</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Barcode" source="x_rugl_barcode">6ff2892b6f09a20029726af6ad3ee447</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="Barcode">6ff2892b6f09a20029726af6ad3ee447</sys_scope>
+        <sys_update_name>sys_ui_application_1d73856b6f09a20029726af6ad3ee426</sys_update_name>
+        <sys_updated_by>hung.nguyen@rumbleasia.com</sys_updated_by>
+        <sys_updated_on>2016-08-11 04:47:47</sys_updated_on>
+    </sys_ui_application>
+</record_update>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element label="Types of barcodes" max_length="40" name="x_rugl_barcode_types_of_barcodes" type="collection">
+        <element label="Active" max_length="40" name="active" type="boolean"/>
+        <element label="Bar widths" max_length="40" name="bar_widths" type="string"/>
+        <element label="Description" max_length="400" name="description" type="string"/>
+        <element label="Format Image" max_length="40" name="format_image" type="user_image"/>
+        <element attributes="edge_encryption_enabled=true" label="Name" max_length="40" name="name" type="string"/>
+        <element label="Parent" max_length="32" name="parent" reference="x_rugl_barcode_barcodes" type="reference"/>
+        <element label="Symbology" max_length="40" name="symbology" type="string"/>
+        <element choice="1" label="Type" max_length="40" name="type" type="choice">
+            <choice>
+                <element label="Continuous" sequence="0" value="Continuous"/>
+                <element label="Discrete" sequence="1" value="Discrete"/>
+                <element label="Neither" sequence="2" value="Neither"/>
+                <element label="2d" sequence="3" value="2d"/>
+            </choice>
+        </element>
+        <index name="index">
+            <element name="parent"/>
+        </index>
+    </element>
+</database>

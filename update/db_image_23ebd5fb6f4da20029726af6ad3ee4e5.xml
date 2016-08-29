@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="db_image">
+    <db_image action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <category>system</category>
+        <format>png</format>
+        <height>225</height>
+        <image/>
+        <name>not_available.png</name>
+        <size_bytes>4624</size_bytes>
+        <sys_class_name>db_image</sys_class_name>
+        <sys_created_by>hung.nguyen@rumbleasia.com</sys_created_by>
+        <sys_created_on>2016-08-12 01:13:42</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>23ebd5fb6f4da20029726af6ad3ee4e5</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>not_available.png</sys_name>
+        <sys_package display_value="Barcode" source="x_rugl_barcode">6ff2892b6f09a20029726af6ad3ee447</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="Barcode">6ff2892b6f09a20029726af6ad3ee447</sys_scope>
+        <sys_update_name>db_image_23ebd5fb6f4da20029726af6ad3ee4e5</sys_update_name>
+        <sys_updated_by>hung.nguyen@rumbleasia.com</sys_updated_by>
+        <sys_updated_on>2016-08-12 01:13:50</sys_updated_on>
+        <thumbnail/>
+        <width>225</width>
+    </db_image>
+    <sys_attachment action="INSERT_OR_UPDATE">
+        <average_image_color/>
+        <compressed>true</compressed>
+        <content_type>image/png</content_type>
+        <encryption_context/>
+        <file_name>image</file_name>
+        <image_height/>
+        <image_width/>
+        <size_bytes>4624</size_bytes>
+        <size_compressed>4609</size_compressed>
+        <sys_created_by>hung.nguyen@rumbleasia.com</sys_created_by>
+        <sys_created_on>2016-08-12 01:13:50</sys_created_on>
+        <sys_id>f01c19fb6f4da20029726af6ad3ee4ce</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>hung.nguyen@rumbleasia.com</sys_updated_by>
+        <sys_updated_on>2016-08-12 01:13:50</sys_updated_on>
+        <table_name>ZZ_YYdb_image</table_name>
+        <table_sys_id>23ebd5fb6f4da20029726af6ad3ee4e5</table_sys_id>
+    </sys_attachment>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>H4sIAAAAAAAAAA==</data>
+        <length>16</length>
+        <position>0</position>
+        <sys_attachment display_value="image" sys_id="f01c19fb6f4da20029726af6ad3ee4ce">f01c19fb6f4da20029726af6ad3ee4ce</sys_attachment>
+        <sys_created_by>hung.nguyen@rumbleasia.com</sys_created_by>
+        <sys_created_on>2016-08-12 01:13:50</sys_created_on>
+        <sys_id>341c19fb6f4da20029726af6ad3ee4ce</sys_id>
+    </sys_attachment_doc>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>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</data>
+        <length>3736</length>
+        <position>1</position>
+        <sys_attachment display_value="image" sys_id="f01c19fb6f4da20029726af6ad3ee4ce">f01c19fb6f4da20029726af6ad3ee4ce</sys_attachment>
+        <sys_created_by>hung.nguyen@rumbleasia.com</sys_created_by>
+        <sys_created_on>2016-08-12 01:13:50</sys_created_on>
+        <sys_id>b41c19fb6f4da20029726af6ad3ee4ce</sys_id>
+    </sys_attachment_doc>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>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</data>
+        <length>2400</length>
+        <position>2</position>
+        <sys_attachment display_value="image" sys_id="f01c19fb6f4da20029726af6ad3ee4ce">f01c19fb6f4da20029726af6ad3ee4ce</sys_attachment>
+        <sys_created_by>hung.nguyen@rumbleasia.com</sys_created_by>
+        <sys_created_on>2016-08-12 01:13:50</sys_created_on>
+        <sys_id>381c19fb6f4da20029726af6ad3ee4ce</sys_id>
+    </sys_attachment_doc>
+</record_update>

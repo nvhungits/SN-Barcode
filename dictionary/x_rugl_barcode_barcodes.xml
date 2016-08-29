@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element label="barcodes" max_length="40" name="x_rugl_barcode_barcodes" type="collection">
+        <element label="Active" max_length="40" name="active" type="boolean"/>
+        <element label="Hint" max_length="1024" name="hint" type="url"/>
+        <element label="Name" max_length="40" name="name" type="string"/>
+    </element>
+</database>

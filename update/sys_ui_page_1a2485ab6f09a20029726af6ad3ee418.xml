@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script><![CDATA[$(document).ready(function(){
+	var barcodeID = document.getElementById("type_barcode").value;
+	loadBarcodeItem(barcodeID);
+	//jQuery.noConflict();
+});
+//Action Button Generate Barcode
+function btn_generateBarcode(){
+	var type = document.getElementById("item_barcode");
+	var selected = type.options[type.selectedIndex].text;
+	
+	var qrcodeID = document.getElementById("barcodeImage");
+	qrcodeID.innerHTML = "";
+	var instance = document.getElementById("instance");
+	var tablename = document.getElementById("table_name");
+	var id = document.getElementById("reference_id");
+	var errorMessage="";
+	try{
+		switch(selected){
+			case "QR code":generate_qrcode(qrcodeID,instance.value,tablename.value,id.value);break;
+			case "Code 39":
+				errorMessage="Reference ID is empty.";
+				generate_barcode(qrcodeID,id.value,"CODE39");
+				break;
+			case "Code 128":
+				errorMessage="Reference ID is empty.";
+				generate_barcode(qrcodeID,id.value,"CODE128");
+				break;
+			case "Code 93":
+				errorMessage="Reference ID is empty.";
+				$("#barcodeImage").barcode(id.value, "code93");
+				var canvas = document.createElement('canvas');
+				canvas.width = qrcodeID.scrollWidth;
+				canvas.height = qrcodeID.scrollHeight;
+				domtoimage.toPng(qrcodeID).then(function (pngDataUrl) {
+					var img = new Image();
+					img.onload = function () {
+						var context = canvas.getContext('2d');
+						context.translate(canvas.width, 0);
+						context.scale(-1, 1);
+						context.drawImage(img, 0, 0);
+						qrcodeID.innerHTML = "";
+						var image = document.createElement("img");
+						image.setAttribute("src", canvas.toDataURL("image/png"));
+						qrcodeID.appendChild(image);
+					};
+
+					img.src = pngDataUrl;
+				});
+				break;
+			case "UPC":
+				errorMessage="Reference ID is not available on trade item and should be 12 characters";
+				generate_barcode(qrcodeID,id.value,"EAN13");
+				break;
+			case "MSI":
+				errorMessage="Reference ID is empty.";
+				generate_barcode(qrcodeID,id.value,"MSI");
+				break;
+			case "ITF":
+				errorMessage="Reference ID greater than or equal to 2 and less than or equal to 8 ";
+				generate_barcode(qrcodeID,id.value,"ITF");
+				break;
+			default:
+				alert("Building...");
+				break;
+		}
+	}
+	catch(e){
+		alert(errorMessage+"\nSystem: "+e);
+	}
+	
+}
+function generate_qrcode(qrcodeID,instance,tablename,id){
+	var qrcode = new QRCode(qrcodeID, {
+		colorDark : "#000000",
+		colorLight : "#ffffff",
+	});
+	var text = instance+tablename+".do?sys_id="+id;
+	qrcode.makeCode(text);
+}
+function generate_barcode(qrcodeID,id,code){
+	var canvas = document.createElement("canvas");
+	JsBarcode(canvas, id, {format: code});
+	var image = document.createElement("img");
+	image.setAttribute("src", canvas.toDataURL("image/png"));
+	qrcodeID.appendChild(image);
+}
+function clearBarcodeImage(){
+	var qrcodeID = document.getElementById("barcodeImage");
+	qrcodeID.innerHTML = "";
+}
+//Onchange Select Barcode Type
+function onchangeType(){
+	clearBarcodeImage();
+	var barcodeID = document.getElementById("type_barcode").value;
+	loadBarcodeItem(barcodeID);
+}
+//Onchange Select Barcode Item
+function onchangeItem(){
+	clearBarcodeImage();
+	var itemID = document.getElementById("item_barcode").value;
+	var item = new GlideRecord("x_rugl_barcode_types_of_barcodes");
+	item.get(itemID);
+	loadImageExample(item.sys_id);
+}
+//Load Item Barcode
+function loadBarcodeItem(parentID){
+	//Linear barcodes
+	var tableName = document.getElementById("table_name");
+	tableName.disabled=parentID=="677951636f49a20029726af6ad3ee4c1"?true:false;
+	var barcodeItem = document.getElementById("item_barcode");
+	clearSelect(barcodeItem);
+	var item = new GlideRecord("x_rugl_barcode_types_of_barcodes");
+	item.addQuery("active", true);
+	item.addQuery("parent", parentID);
+	item.query();
+	var flag = true;
+	while(item.next()){
+		if(flag){
+			loadImageExample(item.sys_id);
+			flag=false;
+		}
+		var option = document.createElement("option");
+		option.text = item.symbology;
+		option.value = item.sys_id;
+		barcodeItem.add(option);
+	}
+}
+//Clear Barcode Item when onchange
+function clearSelect(select){
+	while(select.length > 0) {
+		select.remove(select.length-1);
+	}
+}
+//Load Image Example
+function loadImageExample(id){
+	var image_example = document.getElementById("image_example");
+	var att = new GlideRecord("sys_attachment");
+	att.addQuery("file_name","format_image");
+	att.addQuery("table_sys_id",id);
+	att.query();
+	if(att.next()){
+		image_example.src = att.sys_id + ".iix";
+	}
+	else{
+		image_example.src = "not_available.png";
+	}
+}]]></client_script>
+        <description/>
+        <direct>false</direct>
+        <endpoint>x_rugl_barcode_GenerateBarcode_template.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+	<g:requires name="jquery-1.11.3.min.jsdbx" />
+
+	<g:requires name="JsBarcode.all.jsdbx" /> <!-- Code linear -->
+	<g:evaluate>
+		var table = "table_name";
+		var id = "9002236311036";//"3df9d5636f49a20029726af6ad3ee45b";
+		var barcode = new GlideRecord("x_rugl_barcode_barcodes");
+		barcode.addQuery("active",true);
+		barcode.query();
+	</g:evaluate>
+	<style>
+		.barcode_label{
+			font-weight: bold;
+			margin: 0px;
+			padding: 10px;
+		}
+		#image_example{
+			width:100px;
+		}
+		#btnGenerateBarcode{
+		}
+	</style>
+	<input type="hidden" id="instance" value="${gs.getProperty('glide.servlet.uri')}" />
+	<table>
+		<tr>
+			<td>
+				<label class="barcode_label">
+					Types of barcode
+				</label>
+				<select id="type_barcode" onchange="onchangeType()">
+					<j:while test="${barcode.next()}">
+						<option value="${barcode.sys_id}">${barcode.name}</option>
+					</j:while>
+				</select>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td>
+				<label class="barcode_label">
+					Items of barcode
+				</label>
+				<select id="item_barcode" onchange="onchangeItem()"></select>
+			</td>
+			<td>
+				<label class="barcode_label">
+					Image Example
+				</label>
+				<img id="image_example"></img>
+			</td>
+		</tr>
+	</table>
+	<div>
+		<label class="barcode_label">
+			Document ID
+		</label>
+		<a href="nav_to.do?uri=%2F${table}.do?sys_id=${id}" class="btn btn-default btn-ref icon icon-info" target="_blank"></a>
+	</div>
+	<table>
+		<tr>
+			<td>
+				<label class="barcode_label">
+					Table Name
+				</label>
+				<input type="text" name="tablename" id="table_name" value="${table}" />
+			</td>
+			<td>
+				<label class="barcode_label">
+					Reference ID
+				</label>
+				<input type="text" name="referenceid" id="reference_id" value="${id}" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<button id="btnGenerateBarcode" onclick="btn_generateBarcode()">
+					Generate Barcode
+				</button>
+			</td>
+			<td>
+				<div id="barcodeImage">
+				</div>
+			</td>
+		</tr>
+	</table>
+</j:jelly>]]></html>
+        <name>GenerateBarcode_template</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>hung.nguyen@rumbleasia.com</sys_created_by>
+        <sys_created_on>2016-08-11 04:53:54</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>1a2485ab6f09a20029726af6ad3ee418</sys_id>
+        <sys_mod_count>145</sys_mod_count>
+        <sys_name>GenerateBarcode_template</sys_name>
+        <sys_package display_value="Barcode" source="x_rugl_barcode">6ff2892b6f09a20029726af6ad3ee447</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="Barcode">6ff2892b6f09a20029726af6ad3ee447</sys_scope>
+        <sys_update_name>sys_ui_page_1a2485ab6f09a20029726af6ad3ee418</sys_update_name>
+        <sys_updated_by>hung.nguyen@rumbleasia.com</sys_updated_by>
+        <sys_updated_on>2016-08-23 02:08:37</sys_updated_on>
+    </sys_ui_page>
+</record_update>
